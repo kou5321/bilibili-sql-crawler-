@@ -30,7 +30,6 @@ create table years(
 """)
 conn.commit()
 
-
 # 插入数据的函数
 def insert_sqlserver(data):
     cursor.executemany(
