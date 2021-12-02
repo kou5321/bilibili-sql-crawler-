@@ -7,6 +7,34 @@ import requests
 import json
 from openpyxl import Workbook
 import csv
+import pymssql
+
+# 连接sql server数据库
+conn = pymssql.connect(host='127.0.0.1',
+            user='Ukouyixiao',
+            password='',
+            database='a',
+            charset='utf8')
+cursor = conn.cursor()
+# 创建数据表id设为主键自增
+cursor.execute("""
+if object_id('years','U') is not null
+    drop table years
+create table years(
+    id int not null primary key IDENTITY(1,1),
+    title varchar(500),
+    descs varchar(500),
+    href varchar(500),
+    postDesc varchar(500)
+)
+""")
+conn.commit()
+# 插入数据的函数
+def insert_sqlserver(data):
+    cursor.executemany(
+        "insert into years(title,descs,href,postDesc) VALUES(%s,%s,%s,%s)",data
+    )
+    conn.commit()
 
 # 爬取B站热榜排行
 # 格式解析，[0-当前排名，1-视频标题，2-播放数目，3-弹幕数量，4-综合得分，5-作者，6-视频地址，7-时长，8-评论数，9-收藏数，10-投币数，11-分享数，12-点赞数]
@@ -108,3 +136,5 @@ while(True):
         f_csv.writerow(headers)
         f_csv.writerows(lst)
         print("完成数据录入")
+
+    
