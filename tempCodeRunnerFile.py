@@ -1,0 +1,1 @@
+        # view_num = str(float(view_num.strip("万"))*10000)
